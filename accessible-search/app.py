@@ -35,9 +35,10 @@ if 'page' not in st.session_state:
 # Display content based on the selected page
 if st.session_state.page == "Home":
     st.title("ようこそ！！")
+    st.write("このwebサイトでは検索した言葉の読み上げを行い検索をサポートします")
 
 elif st.session_state.page == "fast-search":
-    search = st.text_input("検索中 ...")
+    search = st.text_input("ここに検索したい言葉を入れてね！")
     # Check if search term is not empty and has changed
     if search:
         search_ = search.replace(' ','+')
