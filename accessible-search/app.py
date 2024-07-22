@@ -25,7 +25,7 @@ def nav_page(page):
 st.sidebar.title("Navigation")
 if st.sidebar.button("Home               "):
     nav_page("Home")
-if st.sidebar.button("fast-search        "):
+if st.sidebar.button("web検索        "):
     nav_page("fast-search")
 
 # Define the default page
@@ -37,7 +37,7 @@ if st.session_state.page == "Home":
     st.title("ようこそ！！")
     st.write("このwebサイトでは検索した言葉の読み上げを行い検索をサポートします")
 
-elif st.session_state.page == "web検索":
+elif st.session_state.page == "fast-search":
     search = st.text_input("ここに検索したい言葉を入れてね！")
     # Check if search term is not empty and has changed
     if search:
