@@ -1,4 +1,5 @@
 streamlit
 hydralit-components
-streamlit_option_menu streamlit_lottie
+streamlit_option_menu
+streamlit_lottie
 google-generativeai
