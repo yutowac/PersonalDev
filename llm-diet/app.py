@@ -27,7 +27,7 @@ def get_response(prompt):
     return response.last
 
 # styling web-page
-local_css("styles.css")
+# local_css("styles.css")
 
 with st.sidebar:
     # st.title(PAGE_TITLE + PAGE_ICON)
