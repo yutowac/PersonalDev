@@ -1,0 +1,4 @@
+streamlit
+hydralit-components
+streamlit_option_menu streamlit_lottie
+google-generativeai
