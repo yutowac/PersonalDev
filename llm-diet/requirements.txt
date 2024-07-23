@@ -1,5 +1,5 @@
-streamlit
-hydralit-components
-streamlit_option_menu
-streamlit_lottie
-google-generativeai
+streamlit==1.36.0
+hydralit-components==1.0.10
+streamlit_option_menu==0.3.13
+streamlit_lottie==0.0.5
+google-generativeai==0.3.0
