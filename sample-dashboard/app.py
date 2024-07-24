@@ -6,19 +6,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the data
-# file_path = 'sample.csv' 
-# data = pd.read_csv(file_path)
-# https://github.com/yutowac/PersonalDev/blob/main/sample-dashboard/sample.csv
-def load_original_data():
-    url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/sample-dashboard/sample.csv'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return pd.read_csv(StringIO(response.text))
-    else:
-        st.error("Failed to load data from GitHub.")
-        return None
+file_path = './sample.csv' 
+data = pd.read_csv(file_path)
 
-data = load_original_data()
+# def load_original_data():
+#     url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/sample-dashboard/sample.csv'
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         return pd.read_csv(StringIO(response.text))
+#     else:
+#         st.error("Failed to load data from GitHub.")
+#         return None
+
+# data = load_original_data()
 
 # Streamlit app
 st.title("Dashboard")
