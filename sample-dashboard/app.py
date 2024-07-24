@@ -1,10 +1,21 @@
+import pandas as pd
+import requests
+from io import StringIO
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the data
-file_path = 'sample.csv'  # Replace with the correct path to your CSV file
-data = pd.read_csv(file_path)
+# file_path = 'sample.csv' 
+# data = pd.read_csv(file_path)
+# https://github.com/yutowac/PersonalDev/blob/main/sample-dashboard/sample.csv
+def load_original_data():
+    url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/sample-dashboard/main/sample.csv'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return pd.read_csv(StringIO(response.text))
+
+data = load_original_data()
 
 # Streamlit app
 st.title("Dashboard")
