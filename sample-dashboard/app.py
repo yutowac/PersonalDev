@@ -14,6 +14,9 @@ def load_original_data():
     response = requests.get(url)
     if response.status_code == 200:
         return pd.read_csv(StringIO(response.text))
+    else:
+        st.error("Failed to load data from GitHub.")
+        return None
 
 data = load_original_data()
 
