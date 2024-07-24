@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 # data = pd.read_csv(file_path)
 # https://github.com/yutowac/PersonalDev/blob/main/sample-dashboard/sample.csv
 def load_original_data():
-    url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/sample-dashboard/main/sample.csv'
+    url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/sample-dashboard/sample.csv'
     response = requests.get(url)
     if response.status_code == 200:
         return pd.read_csv(StringIO(response.text))
