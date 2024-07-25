@@ -82,9 +82,9 @@ def home(person_info):
     cols = st.columns(3)
     with cols[1]:
       if bmi_class == "標準":
-        hc.info_card(title='Body Mass Index', content=f'{round(bmi, 2)}', sentiment='good',bar_value= round((bmi * 100) / bmi_max, 2))
+        hc.info_card(title='Body Mass Index', content=f'{round(bmi, 2)}', sentiment='good',bar_value= round((bmi * 100) / bmi_max, 2),theme_override=hc_theme)
       else:
-        hc.info_card(title='Body Mass Index', content=f'{round(bmi, 2)}', sentiment='bad',bar_value= round((bmi * 100) / bmi_max, 2))
+        hc.info_card(title='Body Mass Index', content=f'{round(bmi, 2)}', sentiment='bad',bar_value= round((bmi * 100) / bmi_max, 2),theme_override=hc_theme)
     with cols[0]:
       hc.info_card(title='Metabolic Rate', content=f'{round(bmr, 2)}',bar_value=100,theme_override=hc_theme)
     with cols[2]:
