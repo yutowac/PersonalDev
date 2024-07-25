@@ -27,10 +27,10 @@ st.title("ユーザーデータレポート")
 st.sidebar.title("メニュー")
 page = st.sidebar.radio("Go to", ["ホーム", "分析"])
 
-if page == "Home":
+if page == "ホーム":
     st.header("ようこそ")
 
-elif page == "Analytics":
+elif page == "分析":
     st.header("分析")
 
     # Row 1: Histograms for gender, height, weight, body_fat_per by area
