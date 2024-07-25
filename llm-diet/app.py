@@ -66,11 +66,11 @@ with st.sidebar:
 # main functions
 def home(person_info):
     bmi, bmi_class = calculate_bmi(person_info)
-    if bmi_class == "underweight":
+    if bmi_class == "やせ型":
       bmi_max = 18.5
-    elif bmi_class == "normal weight":
+    elif bmi_class == "標準":
       bmi_max = 25
-    elif bmi_class == "overweight":
+    elif bmi_class == "肥満":
       bmi_max = 30
     else:
         bmi_max = bmi
@@ -81,7 +81,7 @@ def home(person_info):
 
     cols = st.columns(3)
     with cols[1]:
-      if bmi_class == "normal weight":
+      if bmi_class == "標準":
         hc.info_card(title='Body Mass Index', content=f'{round(bmi, 2)}', sentiment='good',bar_value= round((bmi * 100) / bmi_max, 2))
       else:
         hc.info_card(title='Body Mass Index', content=f'{round(bmi, 2)}', sentiment='bad',bar_value= round((bmi * 100) / bmi_max, 2))
@@ -142,18 +142,18 @@ def plan(person_info):
 
 selected = option_menu(
     menu_title=None,  # required
-    options=["Home", "Diet Calculator", "Diet Planner"],  # required
+    options=["ホーム", "計算", "ダイエットプラン"],  # required
     icons=["house", "globe2", "envelope"],  # optional
     menu_icon="cast",  # optional
     default_index=0,  # optional
     orientation="horizontal",
 )
 
-if selected == "Home":
+if selected == "ホーム":
   home(person_info)
-elif selected == "Diet Calculator":
+elif selected == "計算":
   diet(person_info)
-elif selected == "Diet Planner":
+elif selected == "ダイエットプラン":
   plan(person_info)
 else:
   st.error("Please Submit your information")
