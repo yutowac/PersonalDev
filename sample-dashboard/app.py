@@ -21,20 +21,20 @@ def load_original_data():
 data = load_original_data()
 
 # Streamlit app
-st.title("Dashboard")
+st.title("ユーザーデータレポート")
 
 # Sidebar navigation
-st.sidebar.title("Navigation")
-page = st.sidebar.radio("Go to", ["Home", "Analytics"])
+st.sidebar.title("メニュー")
+page = st.sidebar.radio("Go to", ["ホーム", "分析"])
 
 if page == "Home":
     st.header("ようこそ")
 
 elif page == "Analytics":
-    st.header("Analytics")
+    st.header("分析")
 
     # Row 1: Histograms for gender, height, weight, body_fat_per by area
-    st.subheader("Histograms by Area")
+    st.subheader("地域別のヒストグラム")
     fig, axs = plt.subplots(2, 2, figsize=(15, 10))
 
     columns_to_plot = ['gender', 'height', 'weight', 'body_fat_per']
@@ -49,19 +49,19 @@ elif page == "Analytics":
     st.pyplot(fig)
 
     # Row 2: Pie chart and bar chart
-    st.subheader("Pie Chart and Bar Chart by Area")
+    st.subheader("地域データ")
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
 
     # Pie chart
     area_counts = data['area'].value_counts()
     ax1.pie(area_counts, labels=area_counts.index, autopct='%1.1f%%', startangle=140)
-    ax1.set_title('Distribution of Areas')
+    ax1.set_title('地域別のユーザー数')
 
     # Bar chart
     player_counts = data.groupby('area')['player_id'].nunique()
     player_counts.plot(kind='bar', ax=ax2)
-    ax2.set_title('Number of Players by Area')
-    ax2.set_xlabel('Area')
-    ax2.set_ylabel('Number of Players')
+    ax2.set_title('地域別の測定回数')
+    ax2.set_xlabel('地域)
+    ax2.set_ylabel('測定回数')
 
     st.pyplot(fig)
