@@ -55,13 +55,13 @@ elif page == "分析":
     # Pie chart
     area_counts = data['area'].value_counts()
     ax1.pie(area_counts, labels=area_counts.index, autopct='%1.1f%%', startangle=140)
-    ax1.set_title('地域別のユーザー数')
+    ax1.set_title('users by area')
 
     # Bar chart
     player_counts = data.groupby('area')['player_id'].nunique()
     player_counts.plot(kind='bar', ax=ax2)
-    ax2.set_title('地域別の測定回数')
-    ax2.set_xlabel('地域')
-    ax2.set_ylabel('測定回数')
+    ax2.set_title('measurements by area')
+    ax2.set_xlabel('area')
+    ax2.set_ylabel('number of measurements')
 
     st.pyplot(fig)
