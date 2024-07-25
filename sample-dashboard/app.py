@@ -2,13 +2,10 @@ import pandas as pd
 import requests
 from io import StringIO
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
 
 # Load the data
-# file_path = './sample.csv' 
-# data = pd.read_csv(file_path)
-
 def load_original_data():
     url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/main/sample-dashboard/sample.csv'
     response = requests.get(url)
@@ -35,33 +32,27 @@ elif page == "分析":
 
     # Row 1: Histograms for gender, height, weight, body_fat_per by area
     st.subheader("地域別のヒストグラム")
-    fig, axs = plt.subplots(2, 2, figsize=(15, 10))
-
     columns_to_plot = ['gender', 'height', 'weight', 'body_fat_per']
-    for ax, col in zip(axs.flatten(), columns_to_plot):
-        data[col] = pd.to_numeric(data[col], errors='coerce')
-        data.dropna(subset=[col], inplace=True)
-        data.groupby('area')[col].plot(kind='hist', ax=ax, alpha=0.6, legend=True)
-        ax.set_title(f'Histogram of {col} by Area')
-        ax.set_xlabel(col)
-        ax.set_ylabel('Frequency')
+    fig = make_subplots(rows=2, cols=2, subplot_titles=[f"Histogram of {col} by Area" for col in columns_to_plot])
 
-    st.pyplot(fig)
+    row_col_map = [(1, 1), (1, 2), (2, 1), (2, 2)]
+    for (col, (row, col_idx)) in zip(columns_to_plot, row_col_map):
+        for area in data['area'].unique():
+            hist_data = data[data['area'] == area][col].dropna()
+            fig.add_trace(go.Histogram(x=hist_data, name=area, opacity=0.6), row=row, col=col_idx)
+        fig.update_xaxes(title_text=col, row=row, col=col_idx)
+        fig.update_yaxes(title_text='Frequency', row=row, col=col_idx)
+
+    fig.update_layout(barmode='overlay', showlegend=True)
+    st.plotly_chart(fig)
 
     # Row 2: Pie chart and bar chart
     st.subheader("地域データ")
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5))
+    fig_pie = px.pie(data, names='area', title='Users by Area')
+    st.plotly_chart(fig_pie)
 
-    # Pie chart
     area_counts = data['area'].value_counts()
-    ax1.pie(area_counts, labels=area_counts.index, autopct='%1.1f%%', startangle=140)
-    ax1.set_title('users by area')
-
-    # Bar chart
-    player_counts = data.groupby('area')['player_id'].nunique()
-    player_counts.plot(kind='bar', ax=ax2)
-    ax2.set_title('measurements by area')
-    ax2.set_xlabel('area')
-    ax2.set_ylabel('number of measurements')
-
-    st.pyplot(fig)
+    fig_bar = px.bar(area_counts, x=area_counts.index, y=area_counts.values, title='Measurements by Area')
+    fig_bar.update_xaxes(title_text='Area')
+    fig_bar.update_yaxes(title_text='Number of Measurements')
+    st.plotly_chart(fig_bar)
