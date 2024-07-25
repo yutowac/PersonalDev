@@ -115,7 +115,7 @@ def plan(person_info):
     st.header("Tell us a bit about your preferences!!")
     cols = st.columns(3)
     with cols[0]:
-      loc = st.selectbox('What is your ethnicity?', ["Indian", "American", "Chinese"])
+      loc = st.selectbox('What is your ethnicity?', ["Japanese", "American", "Chinese"])
     with cols[1]:
       vg = st.selectbox('Are you Veg or Non-Veg?', ["Veg", "Non-Veg"])
     with cols[2]:
