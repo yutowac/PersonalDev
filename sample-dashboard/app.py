@@ -61,7 +61,7 @@ elif page == "Analytics":
     player_counts = data.groupby('area')['player_id'].nunique()
     player_counts.plot(kind='bar', ax=ax2)
     ax2.set_title('地域別の測定回数')
-    ax2.set_xlabel('地域)
+    ax2.set_xlabel('地域')
     ax2.set_ylabel('測定回数')
 
     st.pyplot(fig)
