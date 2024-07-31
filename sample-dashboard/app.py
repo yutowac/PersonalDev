@@ -6,6 +6,19 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+st.markdown(
+    """
+    <style>
+    .main .block-container {
+        max-width: 100%;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Load the data
 def load_original_data():
     url = 'https://raw.githubusercontent.com/yutowac/PersonalDev/main/sample-dashboard/sample.csv'
