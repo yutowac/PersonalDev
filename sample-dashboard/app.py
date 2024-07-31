@@ -57,3 +57,25 @@ elif page == "分析":
     fig_bar.update_xaxes(title_text='Area')
     fig_bar.update_yaxes(title_text='Number of Measurements')
     st.plotly_chart(fig_bar)
+
+    # Row 3: Scatter Matrix
+    st.subheader("散布図行列")
+    scatter_matrix_fig = px.scatter_matrix(data, dimensions=['height', 'weight', 'body_fat_per'], color='area')
+    st.plotly_chart(scatter_matrix_fig)
+
+    # Row 4: Box plots
+    st.subheader("箱ひげ図")
+    fig_box = make_subplots(rows=1, cols=3, subplot_titles=["Height by Area", "Weight by Area", "Body Fat % by Area"])
+
+    fig_box.add_trace(go.Box(y=data['height'], x=data['area'], name='Height'), row=1, col=1)
+    fig_box.add_trace(go.Box(y=data['weight'], x=data['area'], name='Weight'), row=1, col=2)
+    fig_box.add_trace(go.Box(y=data['body_fat_per'], x=data['area'], name='Body Fat %'), row=1, col=3)
+
+    fig_box.update_layout(showlegend=False)
+    st.plotly_chart(fig_box)
+
+    # Row 5: Correlation heatmap
+    st.subheader("相関ヒートマップ")
+    corr = data[['height', 'weight', 'body_fat_per']].corr()
+    fig_heatmap = px.imshow(corr, text_auto=True, aspect="auto", title='Correlation Heatmap')
+    st.plotly_chart(fig_heatmap)
