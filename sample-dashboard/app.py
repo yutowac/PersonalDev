@@ -28,15 +28,13 @@ page = st.sidebar.radio("Go to", ["ホーム", "分析"])
 if page == "ホーム":
     st.header("ようこそ")
 
-elif page == "分析":
     st.header("分析")
 
     # Row 1: Histograms for gender, height, weight, body_fat_per by area
-    col1, col2 = st.columns([4, 9])
+    col1, col2 = st.columns(2)
     
     with col1:
         st.subheader("地域別のヒストグラム")
-    with col2:
         columns_to_plot = ['gender', 'height', 'weight', 'body_fat_per']
         fig = make_subplots(rows=2, cols=2, subplot_titles=[f"Histogram of {col} by Area" for col in columns_to_plot])
 
@@ -48,15 +46,11 @@ elif page == "分析":
             fig.update_xaxes(title_text=col, row=row, col=col_idx)
             fig.update_yaxes(title_text='Frequency', row=row, col=col_idx)
 
-        fig.update_layout(barmode='overlay', showlegend=True, height=600, width=1200)
+        fig.update_layout(barmode='overlay', showlegend=True, height=600, width=600)
         st.plotly_chart(fig)
 
-    # Row 2: Pie chart and bar chart
-    col1, col2 = st.columns([4, 9])
-    
-    with col1:
-        st.subheader("地域データ")
     with col2:
+        st.subheader("地域データ")
         fig_pie = px.pie(data, names='area', title='Users by Area', height=400)
         st.plotly_chart(fig_pie)
 
@@ -66,35 +60,30 @@ elif page == "分析":
         fig_bar.update_yaxes(title_text='Number of Measurements')
         st.plotly_chart(fig_bar)
 
-    # Row 3: Scatter Matrix and Box plots
-    col1, col2 = st.columns([4, 9])
+    # Row 2: Scatter Matrix and Box plots
+    col1, col2 = st.columns(2)
     
     with col1:
         st.subheader("散布図行列")
-    with col2:
         scatter_matrix_fig = px.scatter_matrix(data, dimensions=['height', 'weight', 'body_fat_per'], color='area', height=800)
         st.plotly_chart(scatter_matrix_fig)
 
-    col1, col2 = st.columns([4, 9])
-    
-    with col1:
-        st.subheader("箱ひげ図")
     with col2:
+        st.subheader("箱ひげ図")
         fig_box = make_subplots(rows=3, cols=1, subplot_titles=["Height by Area", "Weight by Area", "Body Fat % by Area"])
 
         fig_box.add_trace(go.Box(y=data['height'], x=data['area'], name='Height'), row=1, col=1)
         fig_box.add_trace(go.Box(y=data['weight'], x=data['area'], name='Weight'), row=2, col=1)
         fig_box.add_trace(go.Box(y=data['body_fat_per'], x=data['area'], name='Body Fat %'), row=3, col=1)
 
-        fig_box.update_layout(showlegend=False, height=900, width=1200)
+        fig_box.update_layout(showlegend=False, height=900, width=600)
         st.plotly_chart(fig_box)
 
-    # Row 4: Correlation heatmap
-    col1, col2 = st.columns([4, 9])
+    # Row 3: Correlation heatmap
+    col1, col2 = st.columns(2)
     
     with col1:
         st.subheader("相関ヒートマップ")
-    with col2:
         corr = data[['height', 'weight', 'body_fat_per']].corr()
-        fig_heatmap = px.imshow(corr, text_auto=True, aspect="auto", title='Correlation Heatmap', height=600, width=1200)
+        fig_heatmap = px.imshow(corr, text_auto=True, aspect="auto", title='Correlation Heatmap', height=600, width=600)
         st.plotly_chart(fig_heatmap)
