@@ -117,8 +117,8 @@ elif page == "分析":
     # Row 3: Correlation heatmap
     col1, col2 = st.columns(2)
     
-    with col1:
-        st.subheader("相関ヒートマップ")
-        corr = data[['height', 'weight', 'body_fat_per']].corr()
-        fig_heatmap = px.imshow(corr, text_auto=True, aspect="auto", title='Correlation Heatmap', height=600, width=600)
-        st.plotly_chart(fig_heatmap)
+    # with col1:
+    st.subheader("相関ヒートマップ")
+    corr = data[['height', 'weight', 'body_fat_per']].corr()
+    fig_heatmap = px.imshow(corr, text_auto=True, aspect="auto", title='Correlation Heatmap', height=600, width=600)
+    st.plotly_chart(fig_heatmap)
