@@ -49,32 +49,39 @@ elif page == "分析":
 
     # Row 2: Pie chart and bar chart
     st.subheader("地域データ")
-    fig_pie = px.pie(data, names='area', title='Users by Area')
-    st.plotly_chart(fig_pie)
+    col1, col2 = st.columns(2)
 
-    area_counts = data['area'].value_counts()
-    fig_bar = px.bar(area_counts, x=area_counts.index, y=area_counts.values, title='Measurements by Area')
-    fig_bar.update_xaxes(title_text='Area')
-    fig_bar.update_yaxes(title_text='Number of Measurements')
-    st.plotly_chart(fig_bar)
+    with col1:
+        fig_pie = px.pie(data, names='area', title='Users by Area')
+        st.plotly_chart(fig_pie)
 
-    # Row 3: Scatter Matrix
-    st.subheader("散布図行列")
-    scatter_matrix_fig = px.scatter_matrix(data, dimensions=['height', 'weight', 'body_fat_per'], color='area')
-    st.plotly_chart(scatter_matrix_fig)
+    with col2:
+        area_counts = data['area'].value_counts()
+        fig_bar = px.bar(area_counts, x=area_counts.index, y=area_counts.values, title='Measurements by Area')
+        fig_bar.update_xaxes(title_text='Area')
+        fig_bar.update_yaxes(title_text='Number of Measurements')
+        st.plotly_chart(fig_bar)
 
-    # Row 4: Box plots
-    st.subheader("箱ひげ図")
-    fig_box = make_subplots(rows=1, cols=3, subplot_titles=["Height by Area", "Weight by Area", "Body Fat % by Area"])
+    # Row 3: Scatter Matrix and Box plots
+    col1, col2 = st.columns(2)
 
-    fig_box.add_trace(go.Box(y=data['height'], x=data['area'], name='Height'), row=1, col=1)
-    fig_box.add_trace(go.Box(y=data['weight'], x=data['area'], name='Weight'), row=1, col=2)
-    fig_box.add_trace(go.Box(y=data['body_fat_per'], x=data['area'], name='Body Fat %'), row=1, col=3)
+    with col1:
+        st.subheader("散布図行列")
+        scatter_matrix_fig = px.scatter_matrix(data, dimensions=['height', 'weight', 'body_fat_per'], color='area')
+        st.plotly_chart(scatter_matrix_fig)
 
-    fig_box.update_layout(showlegend=False)
-    st.plotly_chart(fig_box)
+    with col2:
+        st.subheader("箱ひげ図")
+        fig_box = make_subplots(rows=3, cols=1, subplot_titles=["Height by Area", "Weight by Area", "Body Fat % by Area"])
 
-    # Row 5: Correlation heatmap
+        fig_box.add_trace(go.Box(y=data['height'], x=data['area'], name='Height'), row=1, col=1)
+        fig_box.add_trace(go.Box(y=data['weight'], x=data['area'], name='Weight'), row=2, col=1)
+        fig_box.add_trace(go.Box(y=data['body_fat_per'], x=data['area'], name='Body Fat %'), row=3, col=1)
+
+        fig_box.update_layout(showlegend=False, height=900)
+        st.plotly_chart(fig_box)
+
+    # Row 4: Correlation heatmap
     st.subheader("相関ヒートマップ")
     corr = data[['height', 'weight', 'body_fat_per']].corr()
     fig_heatmap = px.imshow(corr, text_auto=True, aspect="auto", title='Correlation Heatmap')
