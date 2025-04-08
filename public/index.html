@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ルートマップ</title>
+    <script>
+        async function loadGoogleMapsApi() {
+            try {
+                const response = await fetch("/config");
+                const config = await response.json();
+                const script = document.createElement("script");
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${config.googleMapsApiKey}&callback=initMap`;
+                script.async = true;
+                script.defer = true;
+                document.head.appendChild(script);
+            } catch (error) {
+                console.error("Google Maps APIのロードに失敗:", error);
+            }
+        }
+
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 10,
+                center: { lat: 35.909508304233, lng: 137.98580355055 }
+            });
+
+            document.getElementById("fetchRoutes").addEventListener("click", () => fetchRoutes(map));
+        }
+
+        async function fetchRoutes(map) {
+            const assignedTo = document.getElementById("assignedTo").value;
+            if (!assignedTo) {
+                alert("担当者を選択してください");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/get-routes?assignedTo=${assignedTo}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    console.error("❌ サーバーエラー:", data.error);
+                    alert(`エラー: ${data.error}`);
+                    return;
+                }
+
+                console.log("📌 取得したデータ:", data);
+
+                if (!Array.isArray(data) || data.length === 0) {
+                    alert("該当する住所がありません");
+                    return;
+                }
+
+                plotRoute(map, data);
+            } catch (error) {
+                console.error("❌ fetchRoutes エラー:", error);
+                alert("ルート取得に失敗しました");
+            }
+        }
+
+        function plotRoute(map, addresses) {
+            const geocoder = new google.maps.Geocoder();
+            const directionsService = new google.maps.DirectionsService();
+            const directionsRenderer = new google.maps.DirectionsRenderer({ suppressMarkers: true }); // ✅ Google Maps のデフォルトのピンを消す
+            directionsRenderer.setMap(map);
+
+            const startLocation = { lat: 35.909508304233, lng: 137.98580355055 }; // ガスショップカネカ
+            const waypoints = [];
+
+            // スタート地点 (S) をマップにマーカーとして追加
+            new google.maps.Marker({
+                position: startLocation,
+                map,
+                label: "S"
+            });
+
+            // 住所リストをジオコーディングして取得
+            const addressPromises = addresses.map(address => {
+                const naganoAddress = "長野県 上伊那郡 " + address;
+                console.log("📍 ジオコーディング中:", naganoAddress);
+                return new Promise((resolve, reject) => {
+                    geocoder.geocode({ address: naganoAddress }, (results, status) => {
+                        if (status === "OK") {
+                            resolve(results[0].geometry.location);
+                        } else {
+                            console.warn(`⚠️ ジオコーディング失敗: ${naganoAddress}`);
+                            reject(null);
+                        }
+                    });
+                });
+            });
+
+            Promise.all(addressPromises)
+                .then(locations => {
+                    // 有効な住所だけを取得
+                    const validLocations = locations.filter(loc => loc !== null);
+
+                    if (validLocations.length === 0) {
+                        alert("有効な住所がありません");
+                        return;
+                    }
+
+                    // **最終目的地 (G) を取得**
+                    const endLocation = validLocations.pop();
+
+                    validLocations.forEach((location, index) => {
+                        waypoints.push({ location, stopover: true });
+                        // 中間地点には 1, 2, 3... の番号を付ける
+                        new google.maps.Marker({
+                            position: location,
+                            map,
+                            label: `${index + 1}`
+                        });
+                    });
+
+                    // 最終目的地 (G) を設定
+                    if (!endLocation || typeof endLocation.lat !== "function" || typeof endLocation.lng !== "function") {
+                        console.error("❌ エラー: `endLocation` が不正なデータ", endLocation);
+                        alert("ルートの最終目的地が設定できません");
+                        return;
+                    }
+                    new google.maps.Marker({
+                        position: endLocation,
+                        map,
+                        label: "G"
+                    });
+
+                    // ルートを設定
+                    directionsService.route({
+                        origin: startLocation,  // **スタート地点をガスショップカネカに固定**
+                        destination: endLocation, // 最終目的地 (G)
+                        waypoints: waypoints,
+                        travelMode: "DRIVING"
+                    }, (response, status) => {
+                        if (status === "OK") {
+                            directionsRenderer.setDirections(response);
+                        } else {
+                            alert("ルートを取得できませんでした");
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error("❌ ルート取得エラー:", error);
+                    alert("ルート取得に失敗しました");
+                });
+        }
+
+        window.onload = loadGoogleMapsApi;
+    </script>
+</head>
+<body>
+    <h2>担当者別ルートマップ</h2>
+    <select id="assignedTo">
+        <option value="">担当者を選択</option>
+        <option value="斎藤">斎藤</option>
+        <option value="滝澤">滝澤</option>
+        <option value="中村">中村</option>
+    </select>
+    <button id="fetchRoutes">ルート取得</button>
+    <div id="map" style="width: 100%; height: 500px;"></div>
+</body>
+</html>
